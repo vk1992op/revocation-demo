@@ -1,0 +1,92 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "app.name" . }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+{{- if .Values.ingress.tlsEnabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.frontendDomain }}
+      secretName: {{ .Values.ingress.frontendTlsSecretName }}
+{{- end }}
+  rules:
+    {{- if eq .Release.Namespace "ocm" }}
+    - host: {{ .Values.ingress.frontendDomain }}
+      http:
+        paths:
+          - path: /issuer(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "app.name" . }}
+                port:
+                  number: {{ .Values.service.port1 }}
+          - path: /api-issuer(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "app.name" . }}
+                port:
+                  number: {{ .Values.service.port }}
+    {{- else if eq .Release.Namespace "ocm-test" }}
+    - host: {{ .Values.ingress.frontendDomain }}
+      http:
+        paths:
+          - path: /holder(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "app.name" . }}
+                port:
+                  number: {{ .Values.service.port1 }}
+          - path: /api-holder(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "app.name" . }}
+                port:
+                  number: {{ .Values.service.port }}
+    {{- else if eq .Release.Namespace "hin" }}
+    - host: {{ .Values.ingress.frontendDomain }}
+      http:
+        paths:
+          - path: /hin-agent(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "app.name" . }}
+                port:
+                  number: {{ .Values.service.port1 }}
+          - path: /api-hin-agent(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "app.name" . }}
+                port:
+                  number: {{ .Values.hin.agent.port }}
+    {{- else if eq .Release.Namespace "cloud-auth" }}
+    - host: {{ .Values.ingress.frontendDomain }}
+      http:
+        paths:
+          - path: /cloud-auth-agent(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "app.name" . }}
+                port:
+                  number: {{ .Values.service.port1 }}
+          - path: /api-cloud-auth-agent(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "app.name" . }}
+                port:
+                  number: {{ .Values.hin.agent.port }}
+    {{- end }}
+{{- end }}

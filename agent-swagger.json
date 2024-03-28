@@ -1,0 +1,1116 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1/invitations": {
+      "get": {
+        "operationId": "RestController_fetchInvitations",
+        "parameters": [
+          {
+            "name": "states",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "initial",
+                  "await-response",
+                  "prepare-response",
+                  "done"
+                ]
+              }
+            }
+          },
+          {
+            "name": "roles",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "sender",
+                  "receiver"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreateInvitationResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "RestController_createInvitation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInvitationRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateInvitationResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/invitations/{id}": {
+      "get": {
+        "operationId": "RestController_getInvitationById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateInvitationResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/invitations/accept": {
+      "post": {
+        "operationId": "RestController_acceptInvitation",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptInvitationRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionRecordDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/connections": {
+      "get": {
+        "operationId": "RestController_fetchConnections",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ConnectionRecordDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/connections/{id}": {
+      "get": {
+        "operationId": "RestController_getConnectionById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionRecordDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/connections/oob/{id}": {
+      "get": {
+        "operationId": "RestController_getConnectionByOobId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ConnectionRecordDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schemas": {
+      "post": {
+        "operationId": "RestController_createSchema",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSchemaRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemaRecordDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "RestController_fetchSchemas",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SchemaRecordDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schemas/get-by-id": {
+      "post": {
+        "operationId": "RestController_getSchemaById",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemaRecordDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/definitions": {
+      "get": {
+        "operationId": "RestController_fetchCredentialDefinitions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CreddefRecordDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "RestController_createCredentialDefinition",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCredentialDefinitionRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreddefRecordDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/definitions/get-by-id": {
+      "post": {
+        "operationId": "RestController_getCredentialDefinitionById",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreddefRecordDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credentials/offers": {
+      "post": {
+        "operationId": "RestController_offerCredential",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferCredentialRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CredentialOfferResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credentials": {
+      "get": {
+        "operationId": "RestController_fetchCredentials",
+        "parameters": [
+          {
+            "name": "states",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "proposal-sent",
+                  "proposal-received",
+                  "offer-sent",
+                  "offer-received",
+                  "declined",
+                  "request-sent",
+                  "request-received",
+                  "credential-issued",
+                  "credential-received",
+                  "done",
+                  "abandoned"
+                ]
+              }
+            }
+          },
+          {
+            "name": "connectionId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CredentialRecordDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credentials/{id}": {
+      "get": {
+        "operationId": "RestController_getCredentialById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CredentialRecordDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credentials/{id}/status": {
+      "get": {
+        "operationId": "RestController_getCredentialStatusById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevocationStatusResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credentials/{id}/revoke": {
+      "patch": {
+        "operationId": "RestController_revokeCredentialById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevocationStatusResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credentials/offers/accept": {
+      "post": {
+        "operationId": "RestController_acceptCredential",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptCredentialDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CredentialRecordDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/credentials/offers/{credential_record_id}/decline": {
+      "post": {
+        "operationId": "RestController_declineCredential",
+        "parameters": [
+          {
+            "name": "credential_record_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CredentialRecordDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/created-dids": {
+      "get": {
+        "operationId": "RestController_getCreatedDids",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DidRecordDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/resolve-did": {
+      "post": {
+        "operationId": "RestController_resolveDid",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IdReqDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "Agent",
+    "description": "Agent API",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      },
+      "basic": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "schemas": {
+      "CreateInvitationResponseDto": {
+        "type": "object",
+        "properties": {
+          "invitationUrl": {
+            "type": "string",
+            "description": "Example of long invitation url",
+            "example": "http://0.0.0.0:8001?oob=eyJAdHlwZSI6Imh0dHBzOi8vZGlkY29tbS5vcmcvb3V0LW9mLWJhbmQvMS4xL2ludml0YXRpb24iLCJAaWQiOiIzYWExNGIzNC04YTk5LTQxY2UtYTY3NC1jODUxYmVhMTIxMWEiLCJsYWJlbCI6IkRFeGNWYXNkX0FHRU5UXzQ1IiwiYWNjZXB0IjpbImRpZGNvbW0vYWlwMSIsImRpZGNvbW0vYWlwMjtlbnY9cmZjMTkiXSwiaGFuZHNoYWtlX3Byb3RvY29scyI6WyJodHRwczovL2RpZGNvbW0ub3JnL2RpZGV4Y2hhbmdlLzEuMCIsImh0dHBzOi8vZGlkY29tbS5vcmcvY29ubmVjdGlvbnMvMS4wIl0sInNlcnZpY2VzIjpbeyJpZCI6IiNpbmxpbmUtMCIsInNlcnZpY2VFbmRwb2ludCI6Imh0dHA6Ly8wLjAuMC4wOjgwMDEiLCJ0eXBlIjoiZGlkLWNvbW11bmljYXRpb24iLCJyZWNpcGllbnRLZXlzIjpbImRpZDprZXk6ejZNa3VFcHllc1pNa3k0a1BpQzhEOEplZERlcm55YTFuaTREMUF3ZmdnWWt6YmR4Il0sInJvdXRpbmdLZXlzIjpbXX1dfQ"
+          },
+          "shortInvitationUrl": {
+            "type": "string",
+            "example": "http://0.0.0.0:8001/invitations/85a7c179-122b-4d2d-9a86-d92ad31cef2b"
+          },
+          "outOfBandId": {
+            "type": "string",
+            "example": "85a7c179-122b-4d2d-9a86-d92ad31cef2b"
+          },
+          "role": {
+            "example": "sender",
+            "enum": [
+              "sender",
+              "receiver"
+            ],
+            "type": "string"
+          },
+          "state": {
+            "example": "Done",
+            "enum": [
+              "initial",
+              "await-response",
+              "prepare-response",
+              "done"
+            ],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        }
+      },
+      "CreateInvitationRequestDto": {
+        "type": "object",
+        "properties": {
+          "goal": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "multiUseInvitation": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AcceptInvitationRequestDto": {
+        "type": "object",
+        "properties": {
+          "invitationUrl": {
+            "type": "string",
+            "description": "Example of long invitation url",
+            "example": "http://0.0.0.0:8001?oob=eyJAdHlwZSI6Imh0dHBzOi8vZGlkY29tbS5vcmcvb3V0LW9mLWJhbmQvMS4xL2ludml0YXRpb24iLCJAaWQiOiIzYWExNGIzNC04YTk5LTQxY2UtYTY3NC1jODUxYmVhMTIxMWEiLCJsYWJlbCI6IkRFeGNWYXNkX0FHRU5UXzQ1IiwiYWNjZXB0IjpbImRpZGNvbW0vYWlwMSIsImRpZGNvbW0vYWlwMjtlbnY9cmZjMTkiXSwiaGFuZHNoYWtlX3Byb3RvY29scyI6WyJodHRwczovL2RpZGNvbW0ub3JnL2RpZGV4Y2hhbmdlLzEuMCIsImh0dHBzOi8vZGlkY29tbS5vcmcvY29ubmVjdGlvbnMvMS4wIl0sInNlcnZpY2VzIjpbeyJpZCI6IiNpbmxpbmUtMCIsInNlcnZpY2VFbmRwb2ludCI6Imh0dHA6Ly8wLjAuMC4wOjgwMDEiLCJ0eXBlIjoiZGlkLWNvbW11bmljYXRpb24iLCJyZWNpcGllbnRLZXlzIjpbImRpZDprZXk6ejZNa3VFcHllc1pNa3k0a1BpQzhEOEplZERlcm55YTFuaTREMUF3ZmdnWWt6YmR4Il0sInJvdXRpbmdLZXlzIjpbXX1dfQ"
+          },
+          "shortInvitationUrl": {
+            "type": "string",
+            "example": "http://0.0.0.0:8001/invitations/85a7c179-122b-4d2d-9a86-d92ad31cef2b"
+          }
+        },
+        "required": [
+          "invitationUrl",
+          "shortInvitationUrl"
+        ]
+      },
+      "ConnectionRecordDto": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "enum": [
+              "start",
+              "invitation-sent",
+              "invitation-received",
+              "request-sent",
+              "request-received",
+              "response-sent",
+              "response-received",
+              "abandoned",
+              "completed"
+            ],
+            "type": "string"
+          },
+          "connectionName": {
+            "type": "string"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "did": {
+            "type": "string"
+          },
+          "invitationDid": {
+            "type": "string"
+          },
+          "outOfBandId": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "CreateSchemaRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "my test schema"
+          },
+          "attributes": {
+            "example": [
+              "first_name, last_name"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "version": {
+            "type": "string",
+            "example": "1.0.2",
+            "pattern": "/^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$/"
+          }
+        },
+        "required": [
+          "name",
+          "attributes",
+          "version"
+        ]
+      },
+      "SchemaRecordDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "version": {
+            "type": "string"
+          },
+          "issuerId": {
+            "type": "string"
+          },
+          "methodName": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "attributes",
+          "version"
+        ]
+      },
+      "IdReqDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "CreddefRecordDto": {
+        "type": "object",
+        "properties": {
+          "schemaId": {
+            "type": "string"
+          },
+          "issuerId": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schemaId",
+          "issuerId",
+          "tag"
+        ]
+      },
+      "CreateCredentialDefinitionRequestDto": {
+        "type": "object",
+        "properties": {
+          "schemaId": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "supportRevocation": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "schemaId",
+          "tag"
+        ]
+      },
+      "OfferCredentialAttributes": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "value"
+        ]
+      },
+      "OfferCredentialRequestDto": {
+        "type": "object",
+        "properties": {
+          "connectionId": {
+            "type": "string",
+            "example": "6464b521-005a-4379-91e0-a3692b31cafd"
+          },
+          "credentialDefinitionId": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferCredentialAttributes"
+            }
+          },
+          "revocable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "credentialDefinitionId",
+          "attributes",
+          "revocable"
+        ]
+      },
+      "CredentialRecordDto": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "enum": [
+              "proposal-sent",
+              "proposal-received",
+              "offer-sent",
+              "offer-received",
+              "declined",
+              "request-sent",
+              "request-received",
+              "credential-issued",
+              "credential-received",
+              "done",
+              "abandoned"
+            ],
+            "type": "string"
+          },
+          "credentialRecordType": {
+            "type": "string"
+          },
+          "connectionId": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfferCredentialAttributes"
+            }
+          },
+          "tags": {
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "credentialRecordType",
+          "tags"
+        ]
+      },
+      "CredentialOfferResponseDto": {
+        "type": "object",
+        "properties": {
+          "credentialUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "shortCredentialUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "credentialRecord": {
+            "$ref": "#/components/schemas/CredentialRecordDto"
+          },
+          "revocationStatusListIndex": {
+            "type": "number"
+          },
+          "revocationRegistryId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "credentialUrl",
+          "shortCredentialUrl",
+          "credentialRecord"
+        ]
+      },
+      "RevocationStatusResponseDto": {
+        "type": "object",
+        "properties": {
+          "revocationRegistryId": {
+            "type": "string"
+          },
+          "valid": {
+            "type": "boolean"
+          },
+          "revocationId": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "revocationRegistryId",
+          "valid",
+          "revocationId"
+        ]
+      },
+      "AcceptCredentialDto": {
+        "type": "object",
+        "properties": {
+          "credentialId": {
+            "type": "string"
+          },
+          "credentialUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "credentialId",
+          "credentialUrl"
+        ]
+      },
+      "DidRecordDto": {
+        "type": "object",
+        "properties": {
+          "did": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "created",
+              "received"
+            ]
+          },
+          "method": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "did",
+          "role",
+          "method",
+          "tags"
+        ]
+      }
+    }
+  }
+}

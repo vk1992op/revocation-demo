@@ -1,0 +1,221 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ template "app.name" . }}"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+    app.kubernetes.io/instance: {{ include "app.revision" . }}
+    app.kubernetes.io/part-of: rse
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      {{- include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "app.labels" . | nindent 8 }}
+      annotations:
+        {{- include "app.metricsAnnotations" . | nindent 8 }}
+{{- if .Values.podAnnotations }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+      securityContext:
+{{- include "app.securitycontext" . | nindent 8 }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecrets }}
+      containers:
+      - name: {{ template "app.name" . }}
+        image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ default .Chart.AppVersion .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+        env:
+        {{- if eq .Release.Namespace "ocm" }}
+          - name: LEDGERS
+            value: {{ .Values.ocm.agent.ledgers | quote }}
+          - name: IDUNION_KEY
+            value: {{ .Values.ocm.agent.idunion.key | quote }}
+          - name: IDUNION_BASIC_USER
+            value: {{ .Values.ocm.agent.idunion.user | quote }}
+          - name: IDUNION_BASIC_PASS
+            value: {{ .Values.ocm.agent.idunion.pass | quote }}
+          - name : AGENT_PEER_URL
+            value: {{ .Values.ocm.agent.peer.url | quote }}
+          - name: AGENT_NAME
+            value: {{ .Values.ocm.agent.issuer.name | quote }}
+          - name: AGENT_KEY
+            value: {{ .Values.ocm.agent.issuer.key | quote }}
+          - name: AGENT_DID_SEED
+            value: {{ .Values.ocm.agent.issuer.did | quote }}
+          - name: AGENT_DB_HOST
+            value: {{ .Values.ocm.agent.db.host | quote }}
+          - name: AGENT_DB_USER
+            value: {{ .Values.ocm.agent.db.user | quote }}
+          - name: AGENT_DB_PASS
+            value: {{ .Values.ocm.agent.db.pass | quote }}
+          - name: AGENT_PORT
+            value: {{ .Values.ocm.agent.port | quote }}
+          - name: AGENT_IS_REST
+            value: {{ .Values.ocm.agent.isRest | quote }}
+          - name: AGENT_MAX_MESSAGES
+            value: {{ .Values.ocm.agent.maxMessage | quote }}
+          - name: AGENT_RETE_LIMIT
+            value: {{ .Values.ocm.agent.rateLimit | quote }}
+          - name: ALLOWED_ORIGINS
+            value: {{ .Values.ocm.agent.allowedOrigin | quote }}
+          - name: AUTH_BASIC_USER
+            value: {{ .Values.ocm.agent.api.basic.user | quote }}
+          - name: AUTH_BASIC_PASS
+            value: {{ .Values.ocm.agent.api.basic.pass | quote }}
+          - name: AUTH_JWT_PUBLIC_KEY
+            value: {{ .Values.ocm.agent.api.jwt.publicKey | quote }}
+          - name: AGENT_OOB_URL
+            value: {{ .Values.ocm.agent.oob.url | quote }}
+          - name: TAILS_SERVER_KEY
+            value: {{ .Values.ca.agent.tails.server.key | quote }}
+          - name: TAILS_SERVER_SECRET
+            value: {{ .Values.ca.agent.tails.server.secret | quote }}
+          - name: TAILS_SERVER_BUCKET_NAME
+            value: {{ .Values.ca.agent.tails.server.bucket | quote }}
+          - name: TAILS_SERVER_BASE_URL
+            value: {{ .Values.ca.agent.tails.server.url | quote }}
+          - name: REVOCATION_LIST_SIZE
+            value: {{ .Values.ca.agent.revocationListSize | quote }}
+        {{- else if eq .Release.Namespace "ocm-test" }}
+          - name: LEDGERS
+            value: {{ .Values.ocmtest.agent.ledgers | quote }}
+          - name: IDUNION_KEY
+            value: {{ .Values.ocmtest.agent.idunion.key | quote }}
+          - name: IDUNION_BASIC_USER
+            value: {{ .Values.ocm.agent.idunion.user | quote }}
+          - name: IDUNION_BASIC_PASS
+            value: {{ .Values.ocm.agent.idunion.pass | quote }}
+          - name : AGENT_PEER_URL
+            value: {{ .Values.ocmtest.agent.peer.url | quote }}
+          - name: AGENT_NAME
+            value: {{ .Values.ocmtest.agent.holder.name | quote }}
+          - name: AGENT_KEY
+            value: {{ .Values.ocmtest.agent.holder.key | quote }}
+          - name: AGENT_DID_SEED
+            value: {{ .Values.ocmtest.agent.holder.did | quote }}
+          - name: AGENT_DB_HOST
+            value: {{ .Values.ocmtest.agent.db.host | quote }}
+          - name: AGENT_DB_USER
+            value: {{ .Values.ocmtest.agent.db.user | quote }}
+          - name: AGENT_DB_PASS
+            value: {{ .Values.ocmtest.agent.db.pass | quote }}
+          - name: AGENT_PORT
+            value: {{ .Values.ocmtest.agent.port | quote }}
+          - name: AGENT_IS_REST
+            value: {{ .Values.ocmtest.agent.isRest | quote }}
+          - name: AGENT_MAX_MESSAGES
+            value: {{ .Values.ocmtest.agent.maxMessage | quote }}
+          - name: AGENT_RETE_LIMIT
+            value: {{ .Values.ocmtest.agent.rateLimit | quote }}
+          - name: ALLOWED_ORIGINS
+            value: {{ .Values.ocmtest.agent.allowedOrigin | quote }}
+          - name: AUTH_BASIC_USER
+            value: {{ .Values.ocmtest.agent.api.basic.user | quote }}
+          - name: AUTH_BASIC_PASS
+            value: {{ .Values.ocmtest.agent.api.basic.pass | quote }}
+          - name: AUTH_JWT_PUBLIC_KEY
+            value: {{ .Values.ocmtest.agent.api.jwt.publicKey | quote }}
+          - name: AGENT_OOB_URL
+            value: {{ .Values.ocmtest.agent.oob.url | quote }}
+        {{- else if eq .Release.Namespace "hin" }}
+          - name: LEDGERS
+            value: {{ .Values.hin.agent.ledgers | quote }}
+          - name : AGENT_PEER_URL
+            value: {{ .Values.hin.agent.peer.url | quote }}
+          - name: AGENT_NAME
+            value: {{ .Values.hin.agent.name | quote }}
+          - name: AGENT_KEY
+            value: {{ .Values.hin.agent.key | quote }}
+          - name: AGENT_DID_SEED
+            value: {{ .Values.hin.agent.did.seed | quote }}
+          - name: AGENT_DB_HOST
+            value: {{ .Values.hin.agent.db.host | quote }}
+          - name: AGENT_DB_USER
+            value: {{ .Values.hin.agent.db.user | quote }}
+          - name: AGENT_DB_PASS
+            value: {{ .Values.hin.agent.db.pass | quote }}
+          - name: AGENT_PORT
+            value: {{ .Values.hin.agent.port | quote }}
+          - name: AGENT_IS_REST
+            value: {{ .Values.hin.agent.is.rest | quote }}
+          - name: AGENT_IS_SVDX
+            value: {{ .Values.hin.agent.is.svdx | quote }}
+          - name: AGENT_SVDX_WEBHOOK_URL
+            value: {{ .Values.hin.agent.svdx.webhook.url | quote }}
+          - name: AGENT_SVDX_BASIC_USER
+            value: {{ .Values.hin.agent.svdx.basic.user | quote }}
+          - name: AGENT_SVDX_BASIC_PASS
+            value: {{ .Values.hin.agent.svdx.basic.pass | quote }}
+          - name: AGENT_MAX_MESSAGES
+            value: {{ .Values.hin.agent.max.messages | quote }}
+          - name: AGENT_RETE_LIMIT
+            value: {{ .Values.hin.agent.rete.limit | quote }}
+          - name: ALLOWED_ORIGINS
+            value: {{ .Values.hin.agent.allowedOrigin | quote }}
+          - name: AGENT_OOB_GOALS 
+            value: {{ .Values.hin.agent.invitationGoals | quote }}
+          - name: AUTH_BASIC_USER
+            value: {{ .Values.hin.agent.api.basic.user | quote }}
+          - name: AUTH_BASIC_PASS
+            value: {{ .Values.hin.agent.api.basic.pass | quote }}
+          - name: AUTH_JWT_PUBLIC_KEY
+            value: {{ .Values.hin.agent.api.jwt.publicKey | quote }}
+          - name: AGENT_OOB_URL
+            value: {{ .Values.hin.agent.oob.url | quote }}
+        {{- else if eq .Release.Namespace "cloud-auth" }}
+          - name: LEDGERS
+            value: {{ .Values.ca.agent.ledgers | quote }}
+          - name : AGENT_PEER_URL
+            value: {{ .Values.ca.agent.peer.url | quote }}
+          - name: AGENT_NAME
+            value: {{ .Values.ca.agent.name | quote }}
+          - name: AGENT_KEY
+            value: {{ .Values.ca.agent.key | quote }}
+          - name: AGENT_DID_SEED
+            value: {{ .Values.ca.agent.did.seed | quote }}
+          - name: AGENT_DB_HOST
+            value: {{ .Values.ca.agent.db.host | quote }}
+          - name: AGENT_DB_USER
+            value: {{ .Values.ca.agent.db.user | quote }}
+          - name: AGENT_DB_PASS
+            value: {{ .Values.ca.agent.db.pass | quote }}
+          - name: AGENT_PORT
+            value: {{ .Values.ca.agent.port | quote }}
+          - name: AGENT_IS_REST
+            value: {{ .Values.ca.agent.is.rest | quote }}
+          - name: AGENT_IS_SVDX
+            value: {{ .Values.ca.agent.is.svdx | quote }}
+          - name: AGENT_MAX_MESSAGES
+            value: {{ .Values.ca.agent.max.messages | quote }}
+          - name: AGENT_RETE_LIMIT
+            value: {{ .Values.ca.agent.rete.limit | quote }}
+          - name: ALLOWED_ORIGINS
+            value: {{ .Values.ca.agent.allowedOrigin | quote }}
+        {{- end }}
+{{- if .Values.extraVars }}
+{{ toYaml .Values.extraVars | indent 8 }}
+{{- end }}
+        ports:
+        {{- if .Values.metrics.enabled }}
+        - name: monitoring
+          containerPort: {{ .Values.metrics.port }}
+        {{- end }}
+        - name: http
+          containerPort: {{ .Values.service.port }}
+        - name: peer
+          containerPort: {{ .Values.service.port1 }}
+        - name: http2
+          containerPort: {{ .Values.service.port2 }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}

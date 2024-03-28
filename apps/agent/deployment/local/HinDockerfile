@@ -1,0 +1,15 @@
+FROM node:18.16.0-buster-slim
+
+RUN apt update -y && apt install python3 git make cmake build-essential -y
+
+WORKDIR /app
+
+COPY . . 
+
+RUN yarn install
+RUN yarn build:agent
+
+EXPOSE 8080
+EXPOSE 8001
+
+CMD ["node", "./dist/apps/agent/main.js"]

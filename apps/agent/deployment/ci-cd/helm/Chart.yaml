@@ -1,0 +1,6 @@
+apiVersion: v1
+appVersion: build-654
+description: agent deployment
+name: agent
+version: 0.0.2
+icon: "https://www.vereign.com/wp-content/themes/vereign2020/images/vereign-logo.svg"
